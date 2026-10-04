@@ -115,7 +115,7 @@ Run the complete verification suite first. It contains 33 RTL testbenches and
 one host-side C test for DS3231 calendar validation:
 
 ```bash
-bash tools/run_tests.sh
+make test
 ```
 
 To inspect the UART MMIO waveform, compile the testbench together with the
@@ -140,23 +140,24 @@ links the C and assembly sources and updates the ROM image committed at
 `rom/firmware.hex`:
 
 ```bash
-bash tools/build_firmware.sh
+make firmware
 ```
 
 Generate the FPGA bitstream with the Gowin headless flow:
 
 ```bash
-GOWIN_ROOT=/home/haihbv/tools/Gowin_V1.9.12.03 \
-  bash tools/build_fpga.sh
+make fpga
 ```
 
 The resulting SRAM image is
 `build/gowin/impl/pnr/fpga_project.fs`. Program it into the board with:
 
 ```bash
-sudo env GOWIN_ROOT=/home/haihbv/tools/Gowin_V1.9.12.03 \
-  bash tools/program_fpga.sh
+make program
 ```
+
+The Makefile defaults `GOWIN_ROOT` to the installation path above. Override
+it for another installation, for example `make fpga GOWIN_ROOT=/opt/Gowin`.
 
 A successful programming operation reaches 100 percent and ends with
 `Finished.`. The FPGA configuration is held in SRAM, so it must be programmed
