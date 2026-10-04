@@ -93,6 +93,7 @@ sudo apt install -y \
   build-essential \
   gcc-riscv64-unknown-elf \
   iverilog \
+  gtkwave \
   picocom
 ```
 
@@ -105,7 +106,7 @@ The commands below use Gowin from this installation path:
 Run every command from the project root:
 
 ```bash
-cd /home/haihbv/Desktop/work/fpga/thiet_ke_he_thong_so
+cd /home/haihbv/Desktop/work/fpga
 ```
 
 ## Test, build and program
@@ -115,6 +116,23 @@ one host-side C test for DS3231 calendar validation:
 
 ```bash
 bash tools/run_tests.sh
+```
+
+To inspect the UART MMIO waveform, compile the testbench together with the
+optional VCD helper, run it, and open the generated trace in GTKWave:
+
+```bash
+mkdir -p build/sim
+iverilog -g2012 \
+  -s uart_mmio_tb -s dump_vcd \
+  -o build/sim/uart.vvp \
+  libs/uart/uart_tx.v \
+  libs/uart/uart_rx.v \
+  source/peripheral/uart_mmio.v \
+  sim/peripheral/uart_mmio_tb.sv \
+  sim/support/dump_vcd.sv
+vvp build/sim/uart.vvp +vcd=build/sim/uart.vcd
+gtkwave build/sim/uart.vcd
 ```
 
 A successful run prints 34 `PASS` lines. Build the firmware next. This command
