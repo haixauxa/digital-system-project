@@ -83,9 +83,10 @@ field ranges and calendar date before presenting the value as a real clock.
 ## Toolchain
 
 The command-line flow uses Icarus Verilog for RTL simulation, the bare-metal
-RISC-V GCC toolchain for firmware, picocom for the serial console, and Gowin
-EDA V1.9.12.03 for synthesis, place and route, bitstream generation and SRAM
-programming. Install the Ubuntu packages with:
+RISC-V GCC toolchain for firmware, picocom for the serial console,
+openFPGALoader for persistent Flash programming, and Gowin EDA V1.9.12.03 for
+synthesis, place and route, bitstream generation and SRAM programming. Install
+the Ubuntu packages with:
 
 ```bash
 sudo apt update
@@ -94,6 +95,7 @@ sudo apt install -y \
   gcc-riscv64-unknown-elf \
   iverilog \
   gtkwave \
+  openfpgaloader \
   picocom
 ```
 
@@ -162,6 +164,17 @@ it for another installation, for example `make fpga GOWIN_ROOT=/opt/Gowin`.
 A successful programming operation reaches 100 percent and ends with
 `Finished.`. The FPGA configuration is held in SRAM, so it must be programmed
 again after removing board power.
+
+To program the generated image into persistent Flash instead, close the serial
+console and run:
+
+```bash
+make flash
+```
+
+The Flash flow uses openFPGALoader at 1 MHz. Override the JTAG frequency when
+needed with `make flash FLASH_FREQ=500000`. A successful operation reports
+`CRC check: Success`; remove and restore board power to verify automatic boot.
 
 ## Console and RTC setup
 
